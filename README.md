@@ -435,7 +435,7 @@ MIT License - see [LICENSE](LICENSE)
 **Balamurugan Elangovan**  
 Principal Software Engineer | Platform Engineering
 
-[GitHub](https://github.com/bala-lab-commerce) | [LinkedIn](https://linkedin.com/in/balamurugan-elangovan) | mail.bala0224@gmail.com
+[GitHub](https://github.com/bala-lab-commerce) | [LinkedIn](https://www.linkedin.com/in/balamurugan-elangovan-53791985/) | mail.bala0224@gmail.com
 
 ---
 
