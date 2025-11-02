@@ -13,6 +13,7 @@ This document visualizes how our Gradle convention plugins compose together to p
 ## Plugin Responsibilities
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#4fc3f7','primaryTextColor':'#ffffff','primaryBorderColor':'#0288d1','secondaryColor':'#81c784','secondaryTextColor':'#ffffff','tertiaryColor':'#ffb74d','tertiaryTextColor':'#ffffff','noteBkgColor':'#fff9c4','fontSize':'16px'}}}%%
 mindmap
   root((Platform Plugins))
     Java Conventions
