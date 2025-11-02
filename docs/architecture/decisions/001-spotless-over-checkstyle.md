@@ -62,12 +62,33 @@ kotlin {
     ktlint("1.7.1")
         .editorConfigOverride(mapOf(
             "indent_size" to "4",
-            "max_line_length" to "150",
-            "ktlint_standard_no-wildcard-imports" to "disabled"
+            "max_line_length" to "120",
+            "ktlint_standard_no-wildcard-imports" to "disabled",
+            "ij_kotlin_allow_trailing_comma" to "true",
+            "ij_kotlin_allow_trailing_comma_on_call_site" to "true"
         ))
     trimTrailingWhitespace()
     endWithNewline()
 }
+```
+
+### Workflow Integration
+
+```mermaid
+graph LR
+    A[Developer] -->|Write Code| B[Local Dev]
+    B -->|Save File| C{.editorconfig}
+    C -->|IDE Formatting| B
+    B -->|git commit| D[Pre-commit Hook]
+    D -->|spotlessCheck| E{Format OK?}
+    E -->|No| F[spotlessApply]
+    F -->|Auto-fix| D
+    E -->|Yes| G[Commit]
+    G --> H[CI/CD]
+    H -->|Build| I[spotlessCheck]
+    I -->|Fail if not formatted| J{Pass?}
+    J -->|Yes| K[Deploy]
+    J -->|No| L[Reject PR]
 ```
 
 ## Alternatives Considered
@@ -95,8 +116,81 @@ We validated this decision by:
 3. Developer feedback during trial period (positive)
 4. Checking community adoption (50k+ GitHub stars)
 
+## Tool Comparison
+
+```mermaid
+quadrantChart
+    title Code Formatting Tools Evaluation
+    x-axis Low Auto-fix --> High Auto-fix
+    y-axis Single Language --> Multi-Language
+    quadrant-1 Best Choice
+    quadrant-2 Consider
+    quadrant-3 Avoid
+    quadrant-4 Limited Use
+    Spotless: [0.9, 0.9]
+    Checkstyle: [0.2, 0.3]
+    ktlint-gradle: [0.8, 0.3]
+    google-java-format: [0.8, 0.2]
+    IDE-only: [0.5, 0.8]
+```
+
+## Integration Points
+
+### 1. Build System
+```bash
+# Check formatting
+./gradlew spotlessCheck
+
+# Fix formatting
+./gradlew spotlessApply
+```
+
+### 2. Pre-commit Hooks
+```yaml
+# .pre-commit-config.yaml
+- repo: local
+  hooks:
+    - id: ktlint-format
+      name: ktlint format
+      entry: .githooks/ktlint-format.sh
+      language: system
+      files: \.kt(s)?$
+```
+
+### 3. CI/CD Pipeline
+```yaml
+# GitHub Actions example
+- name: Check code formatting
+  run: ./gradlew spotlessCheck
+```
+
+### 4. IDE Integration
+```ini
+# .editorconfig
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 120
+ktlint_standard_no-wildcard-imports = disabled
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+```
+
+## Migration Path
+
+For existing projects adopting this convention:
+
+1. **Initial Format**: Run `./gradlew spotlessApply` on entire codebase
+2. **Commit**: Create a single "chore: apply spotless formatting" commit
+3. **Enable Checks**: Add `spotlessCheck` to CI pipeline
+4. **Developer Setup**: Update developer documentation
+
 ## References
 
 - [Spotless GitHub](https://github.com/diffplug/spotless)
 - [google-java-format](https://github.com/google/google-java-format)
 - [ktlint](https://github.com/pinterest/ktlint)
+- [Why Spotless?](https://github.com/diffplug/spotless/blob/main/PADDEDCELL.md)
+
+## Notes
+
+This decision was influenced by our need to support both Java and Kotlin in Spring Boot projects. The unified Gradle plugin approach significantly simplifies our build configuration and developer workflow.
