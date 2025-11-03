@@ -109,6 +109,8 @@ val generateVersions by tasks.registering {
                 appendLine("    const val KTLINT = \"${props.getProperty("ktlintVersion")}\"")
                 appendLine("    const val JACOCO = \"${props.getProperty("jacocoVersion")}\"")
                 appendLine("    const val MOCKK = \"${props.getProperty("mockkVersion")}\"")
+                appendLine("    const val GROOVY = \"${props.getProperty("groovyVersion")}\"")
+                appendLine("    const val SPOCK = \"${props.getProperty("spockVersion")}\"")
                 appendLine("    const val SWAGGER_ANNOTATIONS = \"${props.getProperty("swaggerAnnotationsVersion")}\"")
                 appendLine("    const val SPRINGDOC_OPENAPI = \"${props.getProperty("springdocOpenapiVersion")}\"")
                 appendLine("}")

@@ -11,6 +11,8 @@ import org.gradle.kotlin.dsl.dependencies
  * - Spring Boot Starter Test (includes JUnit 5, Mockito, AssertJ, etc.)
  * - JUnit Platform Launcher for IDE integration
  * - MockK for Kotlin-style mocking (works with Java too)
+ * - Spock Framework for BDD-style testing with Groovy
+ * - Groovy support for writing expressive tests
  * - Proper logging exclusions to avoid conflicts
  *
  * This plugin automatically applies `io.github.platform.java-conventions` to inherit
@@ -34,11 +36,18 @@ import org.gradle.kotlin.dsl.dependencies
  * - Mockito - mocking framework
  * - JSONassert - JSON assertion library
  * - JsonPath - JSON path expressions
+ *
+ * **Spock Framework:**
+ * - spock-core - BDD-style testing with given-when-then syntax
+ * - spock-spring - Spring Boot integration for @SpringBootTest
+ * - Data-driven testing with where: blocks
+ * - Expressive mocking and stubbing
  */
 class SpringTestConventionsPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         with(project) {
             applyBaseConventions()
+            applyGroovyPlugin()
             addTestDependencies()
             excludeConflictingDependencies()
         }
@@ -49,7 +58,12 @@ class SpringTestConventionsPlugin : Plugin<Project> {
         pluginManager.apply("io.github.platform.java-conventions")
     }
 
-    /** Adds Spring Boot Starter Test, MockK, and JUnit Platform Launcher dependencies. */
+    /** Applies Groovy plugin for Spock tests written in Groovy. */
+    private fun Project.applyGroovyPlugin() {
+        pluginManager.apply("groovy")
+    }
+
+    /** Adds Spring Boot Starter Test, MockK, Spock, and JUnit Platform Launcher dependencies. */
     private fun Project.addTestDependencies() {
         dependencies {
             // Spring Boot Starter Test - comprehensive testing support
@@ -57,6 +71,13 @@ class SpringTestConventionsPlugin : Plugin<Project> {
 
             // MockK - powerful mocking library for Kotlin and Java
             add("testImplementation", "io.mockk:mockk:${GeneratedVersions.MOCKK}")
+
+            // Groovy - required for Spock tests
+            add("testImplementation", "org.apache.groovy:groovy:${GeneratedVersions.GROOVY}")
+
+            // Spock Framework - BDD-style testing with given-when-then syntax
+            add("testImplementation", "org.spockframework:spock-core:${GeneratedVersions.SPOCK}")
+            add("testImplementation", "org.spockframework:spock-spring:${GeneratedVersions.SPOCK}")
 
             // JUnit Platform Launcher - required for IDE integration
             add("testRuntimeOnly", "org.junit.platform:junit-platform-launcher")
